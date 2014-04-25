@@ -26,7 +26,7 @@ def arithmetic_sum(a, d, n):
 def all_rings(r, N):
     if N == 0:
         return 0
-    return 2.0*N*r + arithmetic_sum(1, 4, N)
+    return 2*N*r + arithmetic_sum(1, 4, N)
 
 def search(r, target):
     low, high, increase = 0, 1, True
