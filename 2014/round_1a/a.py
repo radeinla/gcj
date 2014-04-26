@@ -20,32 +20,36 @@ def print_answer(t, answer, f):
     f.write(answer)
     f.write("\n")
 
-swap = {
+flip = {
     '0': '1',
     '1': '0'
 }
 
-def get_min(outlets, devices, i, flips, min_flips, L):
-    if set(outlets) == devices:
-        return min(flips, min_flips)
-    if i >= L:
-        return min_flips
-    elif flips >= min_flips:
-        return min_flips
-    else:
-        flipped = []
-        for outlet in outlets:
-            flipped.append(''.join([outlet[0:i], 
-                swap[outlet[i]], 
-                outlet[i+1:]]))
-        min_flips = get_min([outlet[:] for outlet in outlets], devices, i+1, flips, min_flips, L)
-        min_flips = min(
-            min_flips,
-            get_min(flipped, devices, i+1, flips+1, min_flips, L)
-        )
-        return min_flips
+def diff(outlet, device, L):
+    d = []
+    for i in xrange(0, L):
+        if outlet[i] != device[i]:
+            d.append(i)
+    return d
 
+def matches(outlets, reference, diff):
+    new_outlets = []
+    for outlet in outlets:
+        new_outlet = list(outlet)
+        for i in diff:
+            new_outlet[i] = flip[new_outlet[i]]
+        new_outlets.append(''.join(new_outlet))
+    return set(new_outlets) == reference
 
+def get_min(outlets, devices, L):
+    dev = devices[0]
+    min_flips = L + 1
+    reference = set(devices)
+    for outlet in outlets:
+        d = diff(outlet, dev, L)
+        if matches(outlets, reference, d):
+            min_flips = min(min_flips, len(d))
+    return min_flips
 
 def main(argv):
     f = open(get_file(argv), 'r')
@@ -55,11 +59,12 @@ def main(argv):
         N, L = [int(d) for d in (f.readline().split(' '))]
         outlets = f.readline().replace('\n', '').split(' ')
         devices = f.readline().replace('\n', '').split(' ')
-        min_flips = get_min(outlets, set(devices), 0, 0, L+1, L)
+        min_flips = get_min(outlets, devices, L)
         if min_flips <= L:
             print_answer(case, min_flips, f_out)
         else:
             print_answer(case, 'NOT POSSIBLE', f_out)
+            
 
 if __name__ == "__main__":
     main(sys.argv)
