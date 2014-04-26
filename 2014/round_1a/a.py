@@ -26,11 +26,7 @@ swap = {
 }
 
 def get_min(outlets, devices, i, flips, min_flips, L):
-    # print i, flips, min_flips
-    # print outlets
-    # print devices
     if set(outlets) == devices:
-        # print 'oh yes!'
         return min(flips, min_flips)
     if i >= L:
         return min_flips
@@ -39,16 +35,15 @@ def get_min(outlets, devices, i, flips, min_flips, L):
     else:
         flipped = []
         for outlet in outlets:
-            # f = outlet[:]
-            # f[i] = swap[f[i]]
-            # print outlet[i]
             flipped.append(''.join([outlet[0:i], 
                 swap[outlet[i]], 
                 outlet[i+1:]]))
-        return min(
-            get_min(outlets[:], devices, i+1, 0, min_flips, L),
-            get_min(flipped, devices, i+1, 1, min_flips, L)
+        min_flips = get_min([outlet[:] for outlet in outlets], devices, i+1, flips, min_flips, L)
+        min_flips = min(
+            min_flips,
+            get_min(flipped, devices, i+1, flips+1, min_flips, L)
         )
+        return min_flips
 
 
 
@@ -60,10 +55,7 @@ def main(argv):
         N, L = [int(d) for d in (f.readline().split(' '))]
         outlets = f.readline().replace('\n', '').split(' ')
         devices = f.readline().replace('\n', '').split(' ')
-        # print outlets
-        # print devices
         min_flips = get_min(outlets, set(devices), 0, 0, L+1, L)
-        # print min_flips
         if min_flips <= L:
             print_answer(case, min_flips, f_out)
         else:
