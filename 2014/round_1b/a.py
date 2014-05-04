@@ -30,8 +30,7 @@ def get_min_ops(strs):
             sequence.append(sample[i])
         prev = sample[i]
     for i in xrange(0, len(sequence)):
-        mn = 101
-        mx = 0
+        subs = []
         for s in strs:
             sub = 0
             if len(s) == 0:
@@ -42,9 +41,10 @@ def get_min_ops(strs):
             if sub == 0:
                 return None
             else:
-                mx = max(mx, sub)
-                mn = min(mn, sub)
-        n = n + mx - mn
+                subs.append(sub)
+        mid = sorted(subs)[len(subs)/2]
+        for sub in subs:
+            n = n + abs(mid-sub)
     for s in strs:
         if len(s) > 0:
             return None
