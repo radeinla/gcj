@@ -48,21 +48,17 @@ def get_min_ops(strs):
                 d[sub][1] = d[sub][1] + 1
             else:
                 d[sub] = [sub, 1]
-        m, mv = None, None
+        mv = None
         for sub in d.iterkeys():
             to_move = 0
             for sub2 in d.iterkeys():
                 occ = d[sub2][1]
                 to_move = to_move + abs(sub2-sub) * occ
             if mv is None:
-                m = sub
                 mv = to_move
             elif to_move < mv:
-                m = sub
                 mv = to_move
-                mid = m
-        for sub in subs:
-            n = n + abs(mid-sub)
+        n = n + mv
     for s in strs:
         if len(s) > 0:
             return None
