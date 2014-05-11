@@ -36,7 +36,7 @@ def min_gens(P, Q, d, mx):
         if 2 * P > 2 * Q:
             ans = None
         else:
-            if min_gens(2*P-Q, Q, d+1, 40-d):
+            if min_gens(2*P-Q, Q, d+1, 40):
                 ans = d
             else:
                 ans = None
