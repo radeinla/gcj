@@ -25,35 +25,24 @@ def print_answer(t, answer, f):
 cache = {}
 
 def min_gens(P, Q, d, mx):
-    # g = gcd(P, Q)
-    # print P, Q, g
-    # P = P/g
-    # Q = Q/g
-    key = '%d/%d' % (P, Q)
-    if cache.has_key(key):
-        return cache[key]
-    else:
+    g = gcd(P, Q)
+    P = P/g
+    Q = Q/g
+    if d > mx:
         ans = None
-        # print ' '*d, P, Q
-        if d > mx:
+    elif 2 * P == Q:
+        ans = d
+    elif 2 * P > Q:
+        if 2 * P > 2 * Q:
             ans = None
-        elif 2 * P == Q:
-            # print 'got it', P, '/', Q
-            ans = d
-        elif 2 * P > Q:
-            if 2 * P > 2 * Q:
-                # print 'weird orgy???'
-                ans = None
-            else:
-                if min_gens(2*P-Q, Q, d+1, 40-d):
-                    ans = d
-                else:
-                    ans = None
         else:
-            # print 'h'
-            ans = min_gens(P * 2, Q, d+1, 40)
-        cache[key] = ans
-        return cache[key]
+            if min_gens(2*P-Q, Q, d+1, 40-d):
+                ans = d
+            else:
+                ans = None
+    else:
+        ans = min_gens(P * 2, Q, d+1, 40)
+    return ans
 
 def main(argv):
     f = open(get_file(argv), 'r')
