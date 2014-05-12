@@ -1,20 +1,22 @@
 #!/usr/bin/python
 
 import sys
-
+import inspect
 from fractions import gcd
+
+problem = inspect.getmodulename(__file__)
 
 def get_file(argv):
     if len(argv) == 1:
-        return "a.in"
+        return "%s.in" % problem
     else:
-        return "a_%s.in" % (argv[1])
+        return "%s_%s.in" % (problem, argv[1])
 
 def get_file_out(argv):
     if len(argv) == 1:
-        return "a.out"
+        return "%s.out" % problem
     else:
-        return "a_%s.out" % (argv[1])
+        return "%s_%s.out" % (problem, argv[1])
 
 def print_answer(t, answer, f):
     answer = "Case #%d: %s" % (t, answer)
