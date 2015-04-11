@@ -31,23 +31,25 @@ def min_steps(diners, steps, current_min):
         return current_min
     if left == 0:
         return steps
+
+    diners_with_special = [diner for diner in diners if diner > 0]
     max_index = 0
     max_pancakes = 0
-    for i in xrange(0, len(diners)):
-        if max_pancakes < diners[i]:
-            max_pancakes = diners[i]
+    for i in xrange(0, len(diners_with_special)):
+        if max_pancakes < diners_with_special[i]:
+            max_pancakes = diners_with_special[i]
             max_index = i
     if max_pancakes == 1:
         return steps + 1
-    diners_with_special = diners[:]
-    diners_with_special[max_index] = diners[max_index]/2
-    diners_with_special.append(diners[max_index] - diners_with_special[max_index])
-    diners_without_special = [diner-1 for diner in diners if diner > 0]
+    diners_with_special[max_index] = diners_with_special[max_index]/2
+    diners_with_special.append(max_pancakes - diners_with_special[max_index])
     steps_with_special = min_steps(diners_with_special, steps+1, current_min)
     if current_min is None:
         current_min = steps_with_special
     else:
         current_min = min(steps_with_special, current_min)
+
+    diners_without_special = [diner-1 for diner in diners if diner > 0]
     steps_without_special = min_steps(diners_without_special, steps+1, current_min)
     return min(steps_with_special, steps_without_special)
 
