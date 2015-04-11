@@ -25,33 +25,32 @@ def print_answer(t, answer, f):
     f.write("\n") 
 
 def min_steps(diners, steps, current_min):
-    # print ''.join([' ']*steps), steps, diners, current_min
-    left = sum(diners)
     if current_min is not None and steps >= current_min:
         return current_min
-    if left == 0:
+    current_diners = [diner for diner in diners if diner > 0]
+    if not current_diners:
         return steps
-
-    diners_with_special = [diner for diner in diners if diner > 0]
-    max_index = 0
-    max_pancakes = 0
-    for i in xrange(0, len(diners_with_special)):
-        if max_pancakes < diners_with_special[i]:
-            max_pancakes = diners_with_special[i]
-            max_index = i
-    if max_pancakes == 1:
-        return steps + 1
-    diners_with_special[max_index] = diners_with_special[max_index]/2
-    diners_with_special.append(max_pancakes - diners_with_special[max_index])
-    steps_with_special = min_steps(diners_with_special, steps+1, current_min)
+    current_diners.append(0)
+    # print ''.join([' ']*steps), steps, current_diners, current_min
+    for transfer_from in xrange(0, len(current_diners)):
+        for transfer_to in xrange(transfer_from+1, len(current_diners)):
+            if transfer_from != transfer_to:
+                for to_transfer in xrange(1, current_diners[transfer_from]+1):
+                    special_diners = current_diners[:]
+                    special_diners[transfer_from] = special_diners[transfer_from] - to_transfer
+                    special_diners[transfer_to] = special_diners[transfer_to] + to_transfer
+                    special_transfer = min_steps(special_diners, steps+1, current_min)
+                    if current_min is None:
+                        current_min = special_transfer
+                    else:
+                        current_min = min(current_min, special_transfer)
+    let_them_eat = min_steps([diner-1 for diner in current_diners if diner>0], steps+1, current_min)
     if current_min is None:
-        current_min = steps_with_special
+        current_min = let_them_eat
     else:
-        current_min = min(steps_with_special, current_min)
+        current_min = min(current_min, let_them_eat)
+    return current_min
 
-    diners_without_special = [diner-1 for diner in diners if diner > 0]
-    steps_without_special = min_steps(diners_without_special, steps+1, current_min)
-    return min(steps_with_special, steps_without_special)
 
 def main(argv):
     with open(get_file(argv), 'r') as f, open(get_file_out(argv), 'w') as f_out:
@@ -60,7 +59,7 @@ def main(argv):
             N = int(f.readline())
             initial = [int(x) for x in f.readline().split(' ')]
             current_pancakes = sum(initial)
-            print_answer(t, "%d" % min_steps(initial, 0, None), f_out)
+            print_answer(t, "%d" % min_steps(initial, 0, current_pancakes), f_out)
 
 if __name__ == "__main__":
     main(sys.argv)
