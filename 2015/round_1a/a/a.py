@@ -27,20 +27,18 @@ def print_answer(t, answer, f):
 def solve(N, m):
     mn1 = 0
     mn2 = 0
-    mx = 0
+    mx1 = 0
     for i in xrange(1, N):
         if m[i] < m[i-1]:
-            mx = max(mx, m[i-1]-m[i])
-    # print mx
+            mx1 = max(mx1, m[i-1]-m[i])
     for i in xrange(1, N):
         a = 0
         b = 0
-        if m[i] <= m[i-1]:
+        if m[i] < m[i-1]:
             a = m[i-1] - m[i]
-            b = min(mx, m[i-1])
+            b = min(mx1, m[i-1])
         else:
-            b = m[i-1]
-        # print m[i-1], m[i], a, b
+            b = min(mx1, m[i-1])
         mn1 += a
         mn2 += b
 
