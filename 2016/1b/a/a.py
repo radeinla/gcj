@@ -62,12 +62,12 @@ def get_number(S):
         if u in M and M[u] > 0:
             to_remove = M[u]
             for i in xrange(0, to_remove):
-                numbers.append(mapping[u])
+                numbers.append(str(mapping[u]))
                 for c in uc:
                     M[c] = M[c] - 1
                     done = done + 1
     numbers.sort()
-    return ''.join([str(n) for n in numbers])
+    return ''.join(numbers)
 
 def main(argv):
     f = open(get_file(argv), 'r')
