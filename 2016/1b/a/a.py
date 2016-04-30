@@ -28,44 +28,38 @@ def get_number(S):
             M[c] = M[c] + 1
         else:
             M[c] = 1
-    O = ['Z', 'W', 'U', 'X', 'G', 'F', 'V', 'R', 'O', 'N']
+    O = ['Z', 'W', 'U', 'X', 'G', 'FI', 'SV', 'HR', 'NI', 'ON']
     uniques = {
         'Z': ['Z', 'E', 'R', 'O'],
         'W': ['T', 'W', 'O'],
         'U': ['F', 'O', 'U', 'R'],
         'X': ['S', 'I', 'X'],
         'G': ['E', 'I', 'G', 'H', 'T'],
-        'F': ['F', 'I', 'V', 'E'],
-        'V': ['S', 'E', 'V', 'E', 'N'],
-        'R': ['T', 'H', 'R', 'E', 'E'],
-        'O': ['O', 'N', 'E'],
-        'N': ['N', 'I', 'N', 'E'],
+        'FI': ['F', 'I', 'V', 'E'],
+        'SV': ['S', 'E', 'V', 'E', 'N'],
+        'HR': ['T', 'H', 'R', 'E', 'E'],
+        'NI': ['N', 'I', 'N', 'E'],
+        'ON': ['O', 'N', 'E'],
     }
     assert len(uniques) == 10
-    mapping = {
-        'Z': 0,
-        'W': 2,
-        'U': 4,
-        'X': 6,
-        'G': 8,
-        'F': 5,
-        'V': 7,
-        'R': 3,
-        'O': 1,
-        'N': 9,
-    }
+    mapping = [0, 2, 4, 6, 8, 5, 7, 3, 9, 1]
     assert len(mapping) == 10
-    done = 0
     numbers = []
-    for u in O:
-        uc = uniques[u]
-        if u in M and M[u] > 0:
-            to_remove = M[u]
+    for check in xrange(0, len(O)):
+        uc = O[check]
+        found_all = True
+        for test in uc:
+            if test not in M or M[test] < 1:
+                found_all = False
+                break
+        if found_all:
+            to_remove = len(S)
+            for test in uc:
+                to_remove = min(M[test], to_remove)
             for i in xrange(0, to_remove):
-                numbers.append(str(mapping[u]))
-                for c in uc:
+                numbers.append(str(mapping[check]))
+                for c in uniques[uc]:
                     M[c] = M[c] - 1
-                    done = done + 1
     numbers.sort()
     return ''.join(numbers)
 
