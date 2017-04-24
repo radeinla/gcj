@@ -1,17 +1,25 @@
 #!/usr/bin/python
 import sys
 
+PROBLEM = 'b'
+
+dataset = ''
+
+if len(sys.argv) == 2:
+    dataset = sys.argv[1]
+
+
 def get_file(argv):
     if len(argv) == 1:
-        return "a.in"
+        return "{}.in".format(PROBLEM)
     else:
-        return "a_%s.in" % (argv[1])
+        return "{}_{}.in".format(PROBLEM, dataset)
 
 def get_file_out(argv):
     if len(argv) == 1:
-        return "a.out"
+        return "{}.out".format(PROBLEM)
     else:
-        return "a_%s.out" % (argv[1])
+        return "{}_{}.out".format(PROBLEM, dataset)
 
 def print_answer(t, answer, f):
     answer = "Case #%d: %s" % (t, answer)
@@ -83,6 +91,44 @@ MAPPING = {
     (V): (1,1,0),#{(RED): 1, (BLUE): 1, YELLOW:0},
 }
 
+LABEL_MAPPING = {
+    R: 'R',
+    O: 'O',
+    Y: 'Y',
+    G: 'G',
+    B: 'B',
+    V: 'V',
+}
+
+import collections
+
+def get_arrangement(N, U):
+    counter = collections.Counter()
+    for i, n in enumerate(U):
+        counter[i] += n
+
+    with_items = 0
+    for k, v in counter.iteritems():
+        if v > 0:
+            with_items += 1
+
+    for n in U:
+        if n > 0 and n > N/2:
+            return 'IMPOSSIBLE'
+
+    arrangement = [None] * N
+
+    all_items = sum(counter.values())
+    i = 0
+    for color, count in counter.most_common():
+        for j in xrange(0, count):
+            arrangement[i] = LABEL_MAPPING[color]
+            i = i + 2
+            if i > N-1:
+                i = (i % 2) + 1
+
+
+    return ''.join(arrangement)
 
 
 def main(argv):
@@ -92,7 +138,8 @@ def main(argv):
     for t in xrange(1, T+1):
         # ROYGBIV
         U = map(int, f.readline().strip().split())
-        print_answer(t, "{0:.6f}".format(max_speed), f_out)
+        N, U = U[0], U[1:]
+        print_answer(t, "{}".format(get_arrangement(N, U)), f_out)
 
 
 if __name__ == "__main__":
